@@ -1,0 +1,130 @@
+#!/bin/bash
+
+CLYDE_TMP=$(mktemp -d)
+SUDO=sudo
+PACKAGE="$2"
+
+function build_pkg () {
+	git clone "$1" # clone
+	cd "$2" || exit
+	vim "$CLYDE_TMP/$2/PKGBUILD"
+
+	# Go through each dependency to check if there's AUR packages that need to be installed first
+	for depend in $(curl -s "https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=$2" | jq -r '.results[0].Depends[]' 2> /dev/null); do
+		# Removes version bounds, e.g package>=3.10
+		local depend_pkg
+		depend_pkg=$(echo "$depend" | awk -F'[<=>]' '{print $1}')
+		#checks if the package exists in arch repos
+		if ! pacman -Si "$depend_pkg" 2> /dev/null 1> /dev/null
+		then
+			#checks if its already installed on the local system
+			if ! pacman -Qi "$depend_pkg" 2>/dev/null 1>/dev/null
+			then
+				echo "Found dependency ($depend_pkg) not avalible on the Arch Repos, attempting to install from the AUR..."
+				clone_aur_pkg "$depend_pkg"
+			fi
+		fi
+	done
+	
+	# Build and install with dependencies
+	makepkg -si
+}
+
+function check_version () {
+	# Check if package exists
+	if pacman -Qi "$PACKAGE" > /dev/null
+	then
+		# Compare the versions
+		INSTALLED_VERSION=$(pacman -Qi "$PACKAGE" | grep -Po '^Version\s*: \K.+')
+		REMOTE_VERSION=$(curl -s "$1" | jq '.["results"][0]["Version"]' | sed -e 's/^"//' -e 's/"$//')
+		if [ "$INSTALLED_VERSION" = "$REMOTE_VERSION" ]
+		then
+			echo 0
+		else
+			echo "Found update for ${PACKAGE} from ${INSTALLED_VERSION} to ${REMOTE_VERSION}"
+		fi
+	else
+		echo 1
+	fi
+}
+
+function clone_aur_pkg () {
+	PKG_GIT_URL="https://aur.archlinux.org/$1.git"
+	PKG_INFO_URL="https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=$1"
+	OPTION="n"
+
+	# Check if package exists
+	if curl -s --request GET "$PKG_INFO_URL" | grep '"resultcount":0' > /dev/null
+	then
+	       echo "Package ${1} not found"
+	       exit
+	else
+		cd "$CLYDE_TMP" || exit
+		read -r -p "Install ${1}? [y/N]: " OPTION
+		if [[ "$OPTION" == "n" || "$OPTION" == "N" ]]
+		then
+			echo "Canceled by the user! Exiting..."
+		fi
+
+		build_pkg "$PKG_GIT_URL" "${1}"
+	fi
+}
+
+function upgrade_pkgs () {
+	if [ "$PACKAGE" != "" ]
+	then
+		clone_aur_pkg "$PACKAGE"
+		exit
+	fi
+	LOCAL_PKGS=$(pacman -Qqm) # not technically accurate, but accurate enough
+	AMOUNT_UPDATED=0
+	array=("$LOCAL_PKGS")
+	for element in ${array[@]}
+	do
+		PACKAGE="${element}"
+		PKG_INFO_URL="https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=$PACKAGE"
+		NEEDS_UPDATE=$(check_version "$PKG_INFO_URL")
+		if [[ "${NEEDS_UPDATE}" = 1 ]]
+		then
+			AMOUNT_UPDATED=$AMOUNT_UPDATED+1
+			clone_aur_pkg
+		fi
+	done
+	if [[ AMOUNT_UPDATED -eq 0 ]]
+	then
+		echo "No packages to update"
+	else
+		echo "Updated ${AMOUNT_UPDATED} packages"
+	fi
+}
+
+if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
+	echo 'Usage: '
+	echo "install/ins [PACKAGE]: Installs a package"
+	echo "yeet/remove/rm [PACKAGE]: Removes a package"
+	echo "upgrade/upg [OPTIONAL_PACKAGE]: Checks if AUR packages can update, or if the specificed package can update"
+	exit
+fi
+
+cd "$HOME" || exit
+case "$1" in
+	"install"|"ins")
+		clone_aur_pkg "$PACKAGE"
+	;;
+
+	"yeet"|"remove"|"rm")
+		$SUDO pacman -Rn "$PACKAGE"
+	;;
+
+	"upgrade"|"upg")
+		upgrade_pkgs
+	;;
+
+	"clean"|"cl")
+		$SUDO pacman -Sc
+	;;
+
+	*)
+		echo "Unreconized argument!"
+	;;
+esac

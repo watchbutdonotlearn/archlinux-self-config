@@ -1,0 +1,41 @@
+# Static table lookup for hostnames.
+# See hosts(5) for details.
+
+127.0.0.1 localhost
+::1 localhost
+
+# brave
+0.0.0.0 analytics.brave.com
+#0.0.0.0 brave-core-ext.s3.brave.com
+0.0.0.0 crlsets.brave.com
+0.0.0.0 grant.rewards.brave.com
+0.0.0.0 componentupdater.brave.com
+0.0.0.0 static.brave.com
+0.0.0.0 rewards.brave.com
+0.0.0.0 p3a.brave.com
+0.0.0.0 variations.brave.com
+0.0.0.0 static1.brave.com
+0.0.0.0 sync-v2.brave.com
+0.0.0.0 no-thanks.invalid
+
+#0.0.0.0 brave-core-ext.s3.brave.com
+#0.0.0.0 go-updater.brave.com
+#0.0.0.0 laptop-updates.brave.com
+
+
+# firefox
+0.0.0.0 firefox.settings.services.mozilla.com
+0.0.0.0 push.services.mozilla.com
+0.0.0.0 shavar.services.mozilla.com
+0.0.0.0 location.services.mozilla.com
+0.0.0.0 aus5.mozilla.org
+0.0.0.0 incoming.telemetry.mozilla.org
+0.0.0.0 contile.services.mozilla.org
+0.0.0.0 versioncheck-bg.addons.mozilla.org
+0.0.0.0 versioncheck.prod.mozaws.net
+
+# minecraft
+0.0.0.0 s.optifine.net
+0.0.0.0 browser.events.data.microsoft.com
+0.0.0.0 vortex.data.microsoft.com
+0.0.0.0 data.chocolateminecraft.com
