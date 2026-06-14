@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install packages
-sudo pacman -S git 7zip fakeroot debugedit
+sudo pacman -S git 7zip fakeroot debugedit kitty
 chmod +x aurhelper
 chmod +x venvmake
 
