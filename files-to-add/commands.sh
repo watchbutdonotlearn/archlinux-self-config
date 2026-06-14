@@ -1,9 +1,27 @@
 #!/bin/bash
 
 # Install packages
+sudo pacman -Syy
 sudo pacman -S git 7zip fakeroot debugedit kitty
 chmod +x aurhelper
 chmod +x venvmake
+
+
+read -p "Install plasma-meta right now? Say yes if you forgot to do it during arch installation (y/n) " answer
+
+case "$answer" in
+  y|Y)
+    #in case you forgot
+    sudo pacman -S plasma-meta ark
+    ;;
+  n|N)
+    echo "not installing plasma-meta."
+    ;;
+  *)
+    echo "Invalid response. Please enter 'y' or 'n'."
+    ;;
+esac
+
 
 # Install LibreWolf
 gpg --keyserver hkp://keyserver.ubuntu.com --search-keys 662E3CDD6FE329002D0CA5BB40339DD82B12EF16
@@ -51,6 +69,8 @@ sudo systemctl restart NetworkManager
 sudo bash -c "echo -e '[device]\nwifi.scan-rand-mac-address=yes\nethernet.cloned-mac-address=stable\nwifi.cloned-mac-address=stable' > /etc/NetworkManager/conf.d/30-mac-config.conf"
 
 
+
+
 # Remove bloat packages
 sudo pacman -Rdd discover plasma-browser-integration
 sudo chmod -R 444 /home/bobbert/.local/share/kactivitymanagerd/
@@ -59,7 +79,7 @@ sudo chmod -R 444 /home/bobbert/.local/share/kactivitymanagerd/
 # Absolute essential on arch
 sudo pacman -S neofetch
 # install other packages too
-sudo pacman -S python-pip
+#sudo pacman -S python-pip
 
 
 # Install TLP
@@ -100,6 +120,27 @@ case "$tlpanswer" in
     ;;
 esac
 
+
+
+
+
+read -p "Is this computer a virtual machine in virtualbox? If yes, this script will install virtualbox guest (y/n) " tlpanswer
+
+case "$tlpanswer" in
+  y|Y)
+    # Install the script if user answers yes
+    sudo pacman -S virtualbox-guest-utils
+    sudo systemctl enable vboxservice.service
+    VBoxClient --clipboard
+    VBoxClient --draganddrop
+    ;;
+  n|N)
+    echo "Installation of virtualbox guest utils cancelled."
+    ;;
+  *)
+    echo "Invalid response. Please enter 'y' or 'n'."
+    ;;
+esac
 
 
 
