@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install packages
-sudo pacman -S git 7zip
+sudo pacman -S git 7zip fakeroot debugedit
 chmod +x aurhelper
 chmod +x venvmake
 
@@ -63,24 +63,45 @@ sudo pacman -S python-pip
 
 
 # Install TLP
-read -p "Is this computer a laptop? If yes, this script will install TLP (y/n) " tlpanswer
+# read -p "Is this computer a laptop? If yes, this script will install TLP (y/n) " tlpanswer
+#
+# case "$tlpanswer" in
+#   y|Y)
+#     # Install the script if user answers yes
+#     sudo pacman -S tlp
+#     sudo systemctl enable tlp.service
+#     sudo systemctl mask systemd-rfkill.service
+#     sudo systemctl mask systemd-rfkill.socket
+#     echo "TLP installed."
+#     ;;
+#   n|N)
+#     echo "Installation of TLP cancelled."
+#     ;;
+#   *)
+#     echo "Invalid response. Please enter 'y' or 'n'."
+#     ;;
+# esac
+
+
+
+
+read -p "Is this computer a laptop? If yes, this script will install TuneD (y/n) " tlpanswer
 
 case "$tlpanswer" in
   y|Y)
     # Install the script if user answers yes
-    sudo pacman -S tlp
-    sudo systemctl enable tlp.service
-    sudo systemctl mask systemd-rfkill.service
-    sudo systemctl mask systemd-rfkill.socket
-    echo "TLP installed."
+    sudo pacman -S tuned tuned-ppd
     ;;
   n|N)
-    echo "Installation of TLP cancelled."
+    echo "Installation of TuneD cancelled."
     ;;
   *)
     echo "Invalid response. Please enter 'y' or 'n'."
     ;;
 esac
+
+
+
 
 
 # /etc/hosts
