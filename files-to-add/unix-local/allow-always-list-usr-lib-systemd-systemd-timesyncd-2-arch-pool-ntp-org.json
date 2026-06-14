@@ -1,0 +1,23 @@
+{
+    "created": "2026-06-14T00:43:18.000000Z",
+    "name": "allow-always-list-usr-lib-systemd-systemd-timesyncd-2-arch-pool-ntp-org",
+    "enabled": true,
+    "action": "allow",
+    "duration": "always",
+    "operator": {
+        "type": "list",
+        "operand": "list",
+        "list": [
+            {
+                "type": "simple",
+                "operand": "dest.host",
+                "data": "2.arch.pool.ntp.org"
+            },
+            {
+                "type": "simple",
+                "operand": "process.path",
+                "data": "/usr/lib/systemd/systemd-timesyncd"
+            }
+        ]
+    }
+}

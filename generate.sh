@@ -65,7 +65,9 @@ cd ..
 
 # --- Generate the self-extracting script by appending the combined zip ---
 cat "$script_file" "combined_archive.zip" > "$output_script"
-chmod +x "$output_script"
+
+#don't chmod +x it unless you want to test it out
+#chmod +x "$output_script"
 
 # --- Cleanup temporary combined zip ---
 rm "combined_archive.zip"

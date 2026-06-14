@@ -12,7 +12,7 @@ read -p "Install plasma-meta right now? Say yes if you forgot to do it during ar
 case "$answer" in
   y|Y)
     #in case you forgot
-    sudo pacman -S plasma-meta ark
+    sudo pacman -S plasma-meta
     ;;
   n|N)
     echo "not installing plasma-meta."
@@ -22,6 +22,7 @@ case "$answer" in
     ;;
 esac
 
+sudo pacman -S ark dolphin kate ecryptfs-utils
 
 # Install LibreWolf
 gpg --keyserver hkp://keyserver.ubuntu.com --search-keys 662E3CDD6FE329002D0CA5BB40339DD82B12EF16
@@ -77,7 +78,7 @@ sudo chmod -R 444 /home/bobbert/.local/share/kactivitymanagerd/
 
 
 # Absolute essential on arch
-sudo pacman -S neofetch
+# sudo pacman -S neofetch
 # install other packages too
 #sudo pacman -S python-pip
 
@@ -131,8 +132,8 @@ case "$tlpanswer" in
     # Install the script if user answers yes
     sudo pacman -S virtualbox-guest-utils
     sudo systemctl enable vboxservice.service
-    VBoxClient --clipboard
-    VBoxClient --draganddrop
+    sudo VBoxClient --clipboard
+    sudo VBoxClient --draganddrop
     ;;
   n|N)
     echo "Installation of virtualbox guest utils cancelled."
@@ -150,6 +151,7 @@ sudo mv ./hosts /etc/hosts
 # enable sysrq
 sudo mv ./sysrq.conf /etc/sysctl.d/sysrq.conf
 
+mv ./dolphinui.rc ~/.local/share/kxmlgui5/dolphin/dolphinui.rc
 
 
 
