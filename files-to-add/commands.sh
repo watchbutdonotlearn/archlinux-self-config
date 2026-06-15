@@ -151,6 +151,8 @@ sudo mv ./hosts /etc/hosts
 # enable sysrq
 sudo mv ./sysrq.conf /etc/sysctl.d/sysrq.conf
 
+sudo mv ./20-connectivity.conf /etc/NetworkManager/conf.d/20-connectivity.conf
+
 mv ./dolphinui.rc ~/.local/share/kxmlgui5/dolphin/dolphinui.rc
 
 
