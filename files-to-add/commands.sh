@@ -2,7 +2,7 @@
 
 # Install packages
 sudo pacman -Syy
-sudo pacman -S git 7zip fakeroot debugedit kitty
+sudo pacman -S git 7zip fakeroot debugedit kitty vim
 chmod +x aurhelper
 chmod +x venvmake
 
@@ -45,6 +45,8 @@ case "$answer" in
     make
     sudo insmod acer-wmi-battery.ko enable_health_mode=1
     echo "Acer WMI Battery module installed."
+    # i think i remember this being an issue
+    # sudo pacman -S sof-firmware
     ;;
   n|N)
     echo "not installing Acer WMI battery module."
@@ -149,16 +151,32 @@ esac
 # /etc/hosts
 sudo mv ./hosts /etc/hosts
 # enable sysrq
+sudo mkdir -p /etc/sysctl.d/
 sudo mv ./sysrq.conf /etc/sysctl.d/sysrq.conf
 
+sudo mkdir -p /etc/NetworkManager/conf.d/
 sudo mv ./20-connectivity.conf /etc/NetworkManager/conf.d/20-connectivity.conf
 
+mkdir -p ~/.local/share/kxmlgui5/dolphin/
 mv ./dolphinui.rc ~/.local/share/kxmlgui5/dolphin/dolphinui.rc
 
 
+unzip unix-local.zip
+
+
+chmod +x ./after-first-boot-virtualbox.sh
+chmod +x ./other-setup.sh
+
+
+cat bashrc-additions.txt >> ~/.bashrc
 
 
 
+balooctl suspend
+balooctl disable
 
 
 echo "reboot after this for most changes to take effect"
+echo "manual actions required: import opensnitch rules"
+echo "if this is a virtualbox VM, run after-first-boot-virtualbox.sh after reboot"
+echo "if this is a normal pc, run other-setup.sh"

@@ -1,0 +1,4 @@
+
+
+PS1="[\d \t \W]$ "
+export EDITOR="vim"
