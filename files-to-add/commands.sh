@@ -2,7 +2,7 @@
 
 # Install packages
 sudo pacman -Syy
-sudo pacman -S git 7zip fakeroot debugedit kitty vim
+sudo pacman -S git 7zip fakeroot debugedit kitty vim tmux openssh
 chmod +x aurhelper
 chmod +x venvmake
 
@@ -146,6 +146,8 @@ case "$tlpanswer" in
 esac
 
 
+#fonts
+sudo pacman -S ttf-liberation
 
 
 # /etc/hosts
@@ -169,6 +171,11 @@ chmod +x ./other-setup.sh
 
 
 cat bashrc-additions.txt >> ~/.bashrc
+
+
+
+echo "ProcessSizeMax=500M" | sudo tee -a /etc/systemd/coredump.conf
+echo "MaxUse=600M" | sudo tee -a /etc/systemd/coredump.conf
 
 
 
