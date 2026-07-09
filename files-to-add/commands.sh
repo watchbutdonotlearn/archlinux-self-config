@@ -148,6 +148,7 @@ esac
 
 #fonts
 sudo pacman -S ttf-liberation
+./aurhelper install ttf-ms-fonts
 
 
 # /etc/hosts
